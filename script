@@ -1,0 +1,43 @@
+// ==UserScript==
+// @name        Flickr Auto
+// @namespace   flickr-auto-group-follow
+// @include     https://www.flickr.com/groups/*/members/*
+// @version     1
+// @grant       none
+// ==/UserScript==
+
+var currentMember = 0;
+var maxFollowers = 100; //How many do we want to follow at most?
+function run(){
+  var s = document.createElement('script');
+  s.setAttribute('type', 'text/javascript');
+  s.setAttribute('id','jqueryInject');
+  s.setAttribute('src', 'https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js');
+  var head = document.getElementsByTagName('head').item(0);
+  head.appendChild(s);
+	console.log('inside run');
+}
+console.log('before run follow');
+
+function follow(){
+	console.log('inside follow');
+	var groupMembersList = document.getElementsByClassName("view group-members-members-view")[0];
+	var groupMembers = groupMembersList.getElementsByClassName("members-list");
+	//console.log('groupMembers:', groupMembers);
+	//var notFollowing = groupMembers[0].getElementsByClassName("follow.mini.not-follow-view")[currentMember];
+	var notFollowing = groupMembers[0].querySelector('button.follow:not(.is-following)');
+	if(notFollowing.length <=0){
+    	console.log('no followers found');
+  	} else{
+  		if(currentMember < maxFollowers){
+  			notFollowing.click();
+  			console.log('click', notFollowing);
+  		}else{
+  			console.log("max followers reached");
+  		}	
+  	}
+	currentMember++;
+
+}
+run();
+var myVar=setInterval(function () {follow()}, 1000);
